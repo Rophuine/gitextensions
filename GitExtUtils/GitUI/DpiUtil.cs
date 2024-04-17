@@ -196,6 +196,34 @@ namespace GitExtUtils.GitUI
         [DllImport("user32.dll")]
         private static extern int ReleaseDC(IntPtr hwnd, IntPtr deviceContextHandle);
 
+        [DllImport("Shcore.dll")]
+        private static extern IntPtr GetDpiForMonitor([In] IntPtr hmonitor, [In] DpiType dpiType, [Out] out uint dpiX, [Out] out uint dpiY);
+
+        [DllImport("User32.dll")]
+        private static extern IntPtr MonitorFromPoint([In] Point pt, [In] DefaultMonitor dwflags);
+
+        public static Point GetAngularDpiForPoint(Point pt)
+        {
+            IntPtr monitor = MonitorFromPoint(pt, DefaultMonitor.DefaultNearestToPoint);
+            uint dpiX, dpiY;
+            GetDpiForMonitor(monitor, DpiType.Angular, out dpiX, out dpiY);
+            return new Point((int)dpiX, (int)dpiY);
+        }
+
+        private enum DefaultMonitor
+        {
+            NoDefault = 0,
+            DefaultToPrimary = 1,
+            DefaultNearestToPoint = 2
+        }
+
+        private enum DpiType
+        {
+            Effective = 0,
+            Angular = 1,
+            Raw = 2,
+        }
+
         [UsedImplicitly]
         private sealed class DeviceContextSafeHandle : SafeHandleZeroOrMinusOneIsInvalid
         {

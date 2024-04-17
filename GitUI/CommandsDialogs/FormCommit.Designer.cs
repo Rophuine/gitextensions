@@ -1542,7 +1542,7 @@ namespace GitUI.CommandsDialogs
             Margin = new Padding(2);
             MinimumSize = new Size(600, 297);
             Name = "FormCommit";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.Manual;
             Text = "Commit";
             UnstagedFileContext.ResumeLayout(false);
             StagedFileContext.ResumeLayout(false);

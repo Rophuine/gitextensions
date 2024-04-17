@@ -83,7 +83,10 @@ namespace GitUI
         ///   nothing if there is no entry for the form in the settings, or the
         ///   setting would be invisible on the current display configuration.
         /// </summary>
-        protected virtual void RestorePosition()
+        /// <param name="skipIfScaleMismatch">If true, the position will not be restored if the target display has a different scale to the default display.</param>
+        /// <remarks>When restoring position from a form constructor, in certain cases the form will be incorrectly scaled and positioned. To avoid this, call this
+        /// with skipIfScaleMismatch=true from the constructor, and again with skipIfScaleMismatch=false from the onLoad event.</remarks>
+        protected virtual void RestorePosition(bool skipIfScaleMismatch = false)
         {
             if (!_needsPositionRestore)
             {
@@ -100,6 +103,16 @@ namespace GitUI
             if (position is null)
             {
                 return;
+            }
+
+            if (skipIfScaleMismatch)
+            {
+                Point currentScale = DpiUtil.GetAngularDpiForPoint(Location);
+                Point targetScale = DpiUtil.GetAngularDpiForPoint(position.Rect.Location);
+                if (currentScale != targetScale)
+                {
+                    return;
+                }
             }
 
             _needsPositionRestore = false;

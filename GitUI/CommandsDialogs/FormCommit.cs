@@ -356,7 +356,7 @@ namespace GitUI.CommandsDialogs
 
             // By calling this in the constructor, we prevent flickering caused by resizing the
             // form, for example when it is restored to maximised, but first drawn as a smaller window.
-            RestorePosition();
+            RestorePosition(true);
 
             // TODO this code is very similar to code in FileStatusList
             _selectionFilterSubject
@@ -496,6 +496,9 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
+            // Restore the position if it was skipped during the constructor to avoid a scaling bug.
+            RestorePosition();
+
             showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles") != "no";
             MinimizeBox = Owner is null;
             LoadCustomDifftools();
